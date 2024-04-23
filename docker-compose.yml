@@ -1,0 +1,59 @@
+version: '3.1'
+
+services:
+  brt-service_db:
+    container_name: brt-service_db
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changemeinprod!
+    ports:
+      - "5431:5432"
+
+  cdr-service_db:
+    container_name: cdr-service_db
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changemeinprod!
+    ports:
+      - "5432:5432"
+
+  cdr-service:
+    build: cdr-service/
+    container_name: cdr-service
+    depends_on:
+      - cdr-service_db
+      - brt-service
+    ports:
+      - "8081:8080"
+
+  brt-service:
+    build: brt-service/
+    container_name: brt-service
+    depends_on:
+      - brt-service_db
+      - hrs-service
+    ports:
+      - "8082:8080"
+
+  hrs-service:
+    build: hrs-service/
+    container_name: hrs-service
+    ports:
+      - "8083:8080"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+
+
+
