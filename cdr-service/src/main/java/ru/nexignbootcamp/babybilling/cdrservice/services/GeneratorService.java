@@ -1,5 +1,6 @@
 package ru.nexignbootcamp.babybilling.cdrservice.services;
 
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.CDREntity;
 import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.UserEntity;
@@ -10,11 +11,13 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Log
 public class GeneratorService {
 
     final private Long leftBoundary = 1704056400L;
 
-    final private Long rightBoundary = 1735678799L;
+    // 1 Month
+    final private Long rightBoundary = 1706734800L; //1 year - 1735678799L;
 
     final private Long numberOfUsers = 20L;
 
@@ -28,9 +31,12 @@ public class GeneratorService {
 
     private Random random;
 
-    public GeneratorService(CDRRepository cdrRepository, UserRepository userRepository) {
+    private FileGenerator fileGenerator;
+
+    public GeneratorService(CDRRepository cdrRepository, UserRepository userRepository, FileGenerator fileGenerator) {
         this.cdrRepository = cdrRepository;
         this.userRepository = userRepository;
+        this.fileGenerator = fileGenerator;
         random = new Random();
         currentStartTime = leftBoundary;
     }
@@ -49,37 +55,42 @@ public class GeneratorService {
         return userAndTargetMsisdn;
     }
 
-    public CDREntity[] generateCdr() {
-        Long endTime = currentStartTime + random.nextLong(maxCallTime) + 1;
-        Long[] userAndTargetMsisdn = generateUserAndTargetMsisdn();
+    public void run() {
+        Long endTime = currentStartTime + 1;
+        while (endTime <= rightBoundary) {
+            endTime = currentStartTime + random.nextLong(maxCallTime) + 1;
+            Long[] userAndTargetMsisdn = generateUserAndTargetMsisdn();
 
-        CDREntity cdr1 = CDREntity.builder()
-                .callType("01")
-                .clientMsisdn(userAndTargetMsisdn[0])
-                .targetMsisdn(userAndTargetMsisdn[1])
-                .startTime(currentStartTime)
-                .endTime(endTime)
-                .build();
+            CDREntity cdr1 = CDREntity.builder()
+                    .callType("01")
+                    .clientMsisdn(userAndTargetMsisdn[0])
+                    .targetMsisdn(userAndTargetMsisdn[1])
+                    .startTime(currentStartTime)
+                    .endTime(endTime)
+                    .build();
 
-        CDREntity cdr2 = CDREntity.builder()
-                .callType("02")
-                .clientMsisdn(userAndTargetMsisdn[1])
-                .targetMsisdn(userAndTargetMsisdn[0])
-                .startTime(currentStartTime)
-                .endTime(endTime)
-                .build();
+            CDREntity cdr2 = CDREntity.builder()
+                    .callType("02")
+                    .clientMsisdn(userAndTargetMsisdn[1])
+                    .targetMsisdn(userAndTargetMsisdn[0])
+                    .startTime(currentStartTime)
+                    .endTime(endTime)
+                    .build();
 
-        cdrRepository.save(cdr1);
-        cdrRepository.save(cdr2);
+            cdrRepository.save(cdr1);
+            cdrRepository.save(cdr2);
 
-        currentStartTime += (currentStartTime - endTime) / 2;
-        if (random.nextBoolean()) {
-            currentStartTime += random.nextLong(86400) + 1;
+            currentStartTime += (currentStartTime - endTime) / 2;
+            if (random.nextBoolean()) {
+                currentStartTime += random.nextLong(86400) + 1;
+            }
+
+            CDREntity[] cdrPair = new CDREntity[2];
+            cdrPair[0] = cdr1;
+            cdrPair[1] = cdr2;
+
+            fileGenerator.writeCdrToFile(cdrPair);
+
         }
-
-        CDREntity[] result = new CDREntity[2];
-        result[0] = cdr1;
-        result[1] = cdr2;
-        return result;
     }
 }

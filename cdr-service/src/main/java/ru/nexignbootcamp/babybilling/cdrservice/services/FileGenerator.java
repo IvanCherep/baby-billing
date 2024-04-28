@@ -4,37 +4,50 @@ import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.CDREntity;
 import ru.nexignbootcamp.babybilling.cdrservice.mappers.impl.CDREntityStringMapperWithoutIdImpl;
+import ru.nexignbootcamp.babybilling.cdrservice.repositories.CDRRepository;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 @Log
 public class FileGenerator {
 
-    GeneratorService generatorService;
+    private CDRRepository cdrRepository;
+    static private int fileNumber = 1;
+    static private int cdrCounter = 0;
 
     CDREntityStringMapperWithoutIdImpl cdrEntityStringMapperWithoutId;
 
-    public FileGenerator(GeneratorService generatorService, CDREntityStringMapperWithoutIdImpl cdrEntityStringMapperWithoutId) {
-        this.generatorService = generatorService;
+    public FileGenerator(CDRRepository cdrRepository, CDREntityStringMapperWithoutIdImpl cdrEntityStringMapperWithoutId) {
+        this.cdrRepository = cdrRepository;
         this.cdrEntityStringMapperWithoutId = cdrEntityStringMapperWithoutId;
     }
 
-    public void makeFile() {
-        int fileNumber = 1;
-        int cdrCounter = 0;
-        try (FileWriter fileWriter = new FileWriter("cdr-service/cdr_files/cdr_file_" + fileNumber + ".txt")){
-            while (cdrCounter < 5) {
-                CDREntity[] cdrToAndCdrFrom = generatorService.generateCdr();
-                CDREntity cdrTo = cdrToAndCdrFrom[0];
-                CDREntity cdrFrom = cdrToAndCdrFrom[1];
-                cdrCounter += 1;
-                fileWriter.write(cdrEntityStringMapperWithoutId.mapTo(cdrTo));
-                fileWriter.write(cdrEntityStringMapperWithoutId.mapTo(cdrFrom));
+    public void writeCdrToFile(CDREntity[] cdrPair) {
+//        Path cdrFile = Paths.get("cdr-service/cdr_files/cdr_file_" + fileNumber + ".txt");
+        Path cdrFile = Paths.get("/cdr_files/cdr_file_" + fileNumber + ".txt");
+
+        try {
+            if (!Files.exists(cdrFile)) {
+                Files.createFile(cdrFile);
+                log.info(cdrFile.toString() + " is created.");
             }
+            Files.writeString(cdrFile, cdrEntityStringMapperWithoutId.mapTo(cdrPair[0]));
+            Files.writeString(cdrFile, cdrEntityStringMapperWithoutId.mapTo(cdrPair[1]));
+            cdrRepository.save(cdrPair[0]);
+            cdrRepository.save(cdrPair[1]);
         } catch (IOException e) {
-            log.warning("FileWriter exception");
+            log.warning("IOException");
+        }
+        cdrCounter += 2;
+        if (cdrCounter >= 10) {
+//            send(cdrFile)
+            cdrCounter = 0;
+            log.info(cdrFile.toString() + " sent to the BRT service.");
+            fileNumber += 1;
         }
     }
 }

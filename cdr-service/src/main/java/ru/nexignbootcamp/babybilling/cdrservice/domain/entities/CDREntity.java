@@ -14,10 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "transactions")
 public class CDREntity {
 
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
-
     @Id
-    //
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

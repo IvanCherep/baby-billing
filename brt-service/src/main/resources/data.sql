@@ -13,7 +13,7 @@ VALUES  (1, 'Totoro'),
 INSERT INTO data_plans ("id", "title", "ppm_to_native", "ppm_from_native",
     "ppm_to_foreign", "ppm_from_foreign", "minutes_plan", "monthly_payment")
 VALUES  (11, 'Классика', 1.5, 0, 2.5, 0, 0, 0),
-        (12, 'Классика', 1.5, 0, 2.5, 0, 50, 100);
+        (12, 'Помесячный', 1.5, 0, 2.5, 0, 50, 100);
 
 INSERT INTO msisdns ("msisdn", "data_plan_id", "remaining_minutes",
     "remaining_money", "client_id", "last_payment_timestamp")
