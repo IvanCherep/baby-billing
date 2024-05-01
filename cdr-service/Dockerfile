@@ -7,5 +7,5 @@ RUN mvn -f /pom.xml clean package
 FROM openjdk:17-jdk-slim
 WORKDIR /
 COPY --from=build /target/*.jar cdr-service.jar
-EXPOSE 8080
+EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "cdr-service.jar"]

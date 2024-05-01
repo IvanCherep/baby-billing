@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.nexignbootcamp.babybilling.hrsservice.domain.ClientBill;
 import ru.nexignbootcamp.babybilling.hrsservice.domain.ClientCallData;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -34,14 +36,18 @@ public class BillCalculationService {
             remainingMinutes = 0;
         }
 
+        // Округление счета до 1 знака после запятой. Округление ведется в менью сторону.
+        Float moneyBillRoundedToOneDecimalPlace = new BigDecimal(moneyBill).setScale(1, RoundingMode.DOWN).floatValue();
+
         return ClientBill.builder()
                 .msisdn(clientCallData.getMsisdn())
                 .remainingMinutes(remainingMinutes)
-                .moneyBill(moneyBill)
+                .moneyBill(moneyBillRoundedToOneDecimalPlace)
                 .lastPaymentTimestamp(clientCallData.getEndTime())
                 .build();
     }
 
+    // Подсчет количества месяцев прошедших с момента последней оплаты.
     private int calculateHowManyMonthsHavePassed(Long lastPaymentTimestamp, Long endOfCallTimestamp) {
         Calendar lastPaymentCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
         lastPaymentCalendar.setTimeInMillis(lastPaymentTimestamp * 1000L);
@@ -61,6 +67,9 @@ public class BillCalculationService {
         }
     }
 
+    // Вычисление длительности разговора в минутах.
+    // На выходе получается целое число минут.
+    // Каждая дополнительная секунда разговора засчитывается как минута.
     private Integer calculateCallDurationInMinutes(Long startTime, Long endTime) {
         return Integer.valueOf((int) (Math.ceil((endTime - startTime) / 60.0)));
     }

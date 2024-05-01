@@ -7,6 +7,6 @@ RUN mvn -f /pom.xml clean package
 FROM openjdk:17-jdk-slim
 WORKDIR /
 COPY --from=build /target/*.jar hrs-service.jar
-EXPOSE 8080
+EXPOSE 8083
 ENTRYPOINT ["java", "-jar", "hrs-service.jar"]
 

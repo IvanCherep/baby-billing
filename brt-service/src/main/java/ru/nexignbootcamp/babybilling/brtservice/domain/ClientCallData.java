@@ -1,9 +1,13 @@
-package ru.nexignbootcamp.babybilling.hrsservice.domain;
+package ru.nexignbootcamp.babybilling.brtservice.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ClientCallData {
 

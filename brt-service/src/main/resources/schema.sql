@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS clients;
+DROP TABLE IF EXISTS clients CASCADE;
 CREATE TABLE clients (
     "id" BIGINT,
     "name" VARCHAR(255),
     CONSTRAINT "client_id_pk" PRIMARY KEY ("id")
 );
 
-DROP TABLE IF EXISTS data_plans;
+DROP TABLE IF EXISTS data_plans CASCADE;
 CREATE TABLE data_plans (
     id INT,
     title VARCHAR(255),
@@ -18,7 +18,7 @@ CREATE TABLE data_plans (
     CONSTRAINT "data_plan_id_pk" PRIMARY KEY ("id")
 );
 
-DROP TABLE IF EXISTS msisdns;
+DROP TABLE IF EXISTS msisdns CASCADE;
 CREATE TABLE msisdns (
     msisdn BIGINT,
     data_plan_id INT,

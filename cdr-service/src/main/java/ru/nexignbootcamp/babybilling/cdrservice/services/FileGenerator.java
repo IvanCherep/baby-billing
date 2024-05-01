@@ -1,6 +1,7 @@
 package ru.nexignbootcamp.babybilling.cdrservice.services;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.CDREntity;
 import ru.nexignbootcamp.babybilling.cdrservice.mappers.impl.CDREntityStringMapperWithoutIdImpl;
@@ -10,21 +11,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 @Service
-@Log
+@Slf4j
 public class FileGenerator {
 
-    private CDRRepository cdrRepository;
     static private int fileNumber = 1;
+
     static private int cdrCounter = 0;
 
+    @Autowired
+    private CDRRepository cdrRepository;
+
+    @Autowired
     CDREntityStringMapperWithoutIdImpl cdrEntityStringMapperWithoutId;
 
-    public FileGenerator(CDRRepository cdrRepository, CDREntityStringMapperWithoutIdImpl cdrEntityStringMapperWithoutId) {
-        this.cdrRepository = cdrRepository;
-        this.cdrEntityStringMapperWithoutId = cdrEntityStringMapperWithoutId;
-    }
+    @Autowired
+    FileToKafkaProducerTransfer fileToKafkaProducerTransfer;
+
 
     public void writeCdrToFile(CDREntity[] cdrPair) {
 //        Path cdrFile = Paths.get("cdr-service/cdr_files/cdr_file_" + fileNumber + ".txt");
@@ -35,19 +40,20 @@ public class FileGenerator {
                 Files.createFile(cdrFile);
                 log.info(cdrFile.toString() + " is created.");
             }
-            Files.writeString(cdrFile, cdrEntityStringMapperWithoutId.mapTo(cdrPair[0]));
-            Files.writeString(cdrFile, cdrEntityStringMapperWithoutId.mapTo(cdrPair[1]));
+            Files.writeString(cdrFile, cdrEntityStringMapperWithoutId.mapTo(cdrPair[0]), StandardOpenOption.APPEND);
+            Files.writeString(cdrFile, cdrEntityStringMapperWithoutId.mapTo(cdrPair[1]), StandardOpenOption.APPEND);
             cdrRepository.save(cdrPair[0]);
             cdrRepository.save(cdrPair[1]);
         } catch (IOException e) {
-            log.warning("IOException");
+            log.warn("IOException");
         }
         cdrCounter += 2;
         if (cdrCounter >= 10) {
-//            send(cdrFile)
-            cdrCounter = 0;
+            fileToKafkaProducerTransfer.sendPathToKafkaProducer(cdrFile);
             log.info(cdrFile.toString() + " sent to the BRT service.");
+            cdrCounter = 0;
             fileNumber += 1;
         }
     }
+
 }
