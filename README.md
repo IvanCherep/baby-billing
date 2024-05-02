@@ -1,9 +1,25 @@
-# Приложение в микросервисной архитектуре эмулирующее работу биллинговой системы
-Практическое задание на Nexign Bootcamp 2024.<br>
+# Baby-billing
+## _Приложение в микросервисной архитектуре эмулирующее работу биллинговой системы_
+Практическое задание на Nexign Bootcamp 2024.
 **О проекте:** Приложение включает в себя три микросервиса:
-* Сервис генерации CDR-фалов
-* Сервис расчета цен для конкретных звоноков
-* Сервис обработки CDR-файлов
+* CDR-севрис
+Основная задача сервиса - генерировать данные: CDR-файлы, запросы о пополнение счета и смене тарифа.
+* BRT-сервис
+Хранит данные о абонентах. Обрабатывает CDR-файлы. Передает данные необходимые для высталвения счета в HRS-сервис. Изменяет баланс на основе примененных данных.
+* HRS-сервис
+Расчитывает сумму списания с клиента.
+
+| Инструменты |
+| ------ |
+| OpenJDK 17 |
+| maven |
+| Junit5 |
+| Spring Boot |
+| Kafka |
+| Docker |
+| PostgreSQL |
+| Postman |
+| Swagger |
 
 ## Для запуска приложения необходимо:
 * [Установить докер](https://docs.docker.com/get-docker/)
@@ -20,6 +36,14 @@
 ```shell
  $ docker-compose down
 ```
+
+<details>
+<summary>Click to toggle contents of `code`</summary>
+
+```
+CODE!
+```
+</details>
 
 HRS-service:
 POST localhost:8083/calculate
@@ -50,3 +74,10 @@ CDR:
 Порт: 5432
 Логин: postgres
 Пароль: changemeinprod!
+
+## Dictionary
+- BRT – Billing Real Time
+- CDR – Call Data Record
+- HRS – High performance rating server
+- msisdn  - Mobile Subscriber Integrated Services Digital Number
+- PPM - price per minute
