@@ -13,16 +13,15 @@
 | ------ |
 | OpenJDK 17 |
 | maven |
-| Junit5 |
 | Spring Boot |
 | Kafka |
 | Docker |
 | PostgreSQL |
 | Postman |
-| Swagger |
 
 ## Для запуска приложения необходимо:
 * [Установить докер](https://docs.docker.com/get-docker/)
+* Запустить докер
 * Скопировать репозиторий и перейте в папку с проектом
 
 ## Использование
@@ -124,6 +123,38 @@
 			<li>Content-Type: application/json</li>
 			<li>Пример запроса через postman для 30 минутного звонка. Дата последней оплаты датируется прошлым месяцем, стоимость минуты звонка 1.5 у.е.: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/calculate_postman_example.png" alt="calculate запрос через postman"></li>
 		</ul>
+	</ul>
+	<p>Чтобы вам было проще проверять, прикладываю тела к запросам:</p>
+	<ul>
+		<li>
+			<p>PUT localhost:8082/pay/79212345678</p>
+<code>{
+    "msisdn": 79212345678,
+    "money": 100
+}</code>
+		</li>
+  		<li>
+			<p>POST localhost:8082/changeTariff</p>
+<code>{
+    "login": "admin",
+    "password": "admin",
+    "msisdn": 79218740659,
+    "tariffId": 12
+}</code>
+		</li>
+		<li>
+			<p>POST localhost:8083/calculate</p>
+<code>{
+    "msisdn": 79999999999,
+    "startTime": 1715526000,
+    "endTime": 1715527800,
+    "pricePerMinute": 1.5,
+    "clientRemainingMinutes": 20,
+    "lastPaymentTimestamp": 1712935763,
+    "tariffMonthlyFee": 100,
+    "tariffMinutesPlan": 20
+}</code>
+		</li>
 	</ul>
 </details>
 
@@ -315,42 +346,6 @@ BRT сервис имеет пять основных функций:
 	<li> HrsServiceApplication - Запускает приложение. </li>
 </ul>
 </details>
-
-
-
-
-
-
-
-HRS-service:
-POST localhost:8083/calculate
-JSON:
-{
-    "msisdn": 79999999999,
-    "startTime": 1713866400,
-    "endTime": 1713868200,
-    "pricePerMinute": 1.5,
-    "clientRemainingMinutes": 100,
-    "lastPaymentTimestamp": 1669372200,
-    "tariffMonthlyFee": 100,
-    "tariffMinutesPlan": 500
-}
-
-Чтобы посмотерть таблицы CDR и BRT сервиса перейдите на localhost:5050. admin@admin.com password
-и добавтье серверса:
-BRT:
-Название: любое
-Адрес: brt-service_db
-Порт: 5432
-Логин: postgres
-Пароль: changemeinprod!
-
-CDR:
-Название: любое
-Адрес: cdr-service_db
-Порт: 5432
-Логин: postgres
-Пароль: changemeinprod!
 
 ## Dictionary
 * BRT – Billing Real Time
