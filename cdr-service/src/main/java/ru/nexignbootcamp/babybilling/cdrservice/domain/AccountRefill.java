@@ -1,4 +1,4 @@
-package ru.nexignbootcamp.babybilling.cdrservice.domain.dto;
+package ru.nexignbootcamp.babybilling.cdrservice.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
-
-    private Long id;
+public class AccountRefill {
 
     private Long msisdn;
+
+    private Float money;
 
 }

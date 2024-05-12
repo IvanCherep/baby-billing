@@ -20,11 +20,11 @@ public class KafkaConsumer {
 
     @KafkaListener(id = "consumer", topics = {"${kafka.topic}"})
     public void onMessage(ConsumerRecord<String, Map> record) {
-        // Path cdrFile = Paths.get("cdr-service/cdr_files_from_kafka/" + record.key());
         Path cdrFile = Paths.get(record.key());
         byte[] cdrFileInBytes = (byte[]) record.value().get(record.key());
         try {
             Files.write(cdrFile, cdrFileInBytes);
+            log.info(String.format("File %s received", record.key()));
             cdrFileHandlerService.authorize(cdrFile);
         } catch (IOException e) {
             log.error("Failed to write bytes into file.");

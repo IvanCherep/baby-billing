@@ -7,8 +7,9 @@ import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.UserEntity;
 import ru.nexignbootcamp.babybilling.cdrservice.repositories.CDRRepository;
 import ru.nexignbootcamp.babybilling.cdrservice.repositories.UserRepository;
 
-import java.util.Optional;
+import java.util.Calendar;
 import java.util.Random;
+import java.util.TimeZone;
 
 @Service
 @Log
@@ -16,12 +17,15 @@ public class GeneratorService {
 
     final private Long leftBoundary = 1704056400L;
 
-    // 1 Month
-    final private Long rightBoundary = 1706734800L; //1 year - 1735678799L;
+    final private Long rightBoundary = 1735678799L;
 
     final private Long numberOfUsers = 20L;
 
     final private Long maxCallTime = 7200L;
+
+    final private AccountRefillGenerationService accountRefillGenerationService;
+
+    final private ChangeTariffGenerationService changeTariffGenerationService;
 
     private Long currentStartTime;
 
@@ -33,12 +37,22 @@ public class GeneratorService {
 
     private FileGenerator fileGenerator;
 
-    public GeneratorService(CDRRepository cdrRepository, UserRepository userRepository, FileGenerator fileGenerator) {
+    private int currentMonthNumber;
+
+
+    public GeneratorService(CDRRepository cdrRepository,
+                            UserRepository userRepository,
+                            FileGenerator fileGenerator,
+                            AccountRefillGenerationService accountRefillGenerationService,
+                            ChangeTariffGenerationService changeTariffGenerationService) {
         this.cdrRepository = cdrRepository;
         this.userRepository = userRepository;
         this.fileGenerator = fileGenerator;
+        this.accountRefillGenerationService = accountRefillGenerationService;
+        this.changeTariffGenerationService = changeTariffGenerationService;
         random = new Random();
         currentStartTime = leftBoundary;
+        currentMonthNumber = 1;
     }
 
     public Long[] generateUserAndTargetMsisdn() {
@@ -79,7 +93,7 @@ public class GeneratorService {
 
             cdrRepository.save(cdr1);
             cdrRepository.save(cdr2);
-
+            
             currentStartTime += (currentStartTime - endTime) / 2;
             if (random.nextBoolean()) {
                 currentStartTime += random.nextLong(86400) + 1;
@@ -91,6 +105,22 @@ public class GeneratorService {
 
             fileGenerator.writeCdrToFile(cdrPair);
 
+            if (isItNewMonth(currentStartTime)) {
+                accountRefillGenerationService.refill();
+                changeTariffGenerationService.changeTariff();
+
+            }
+
         }
+    }
+
+    private boolean isItNewMonth(Long currentTime) {
+        Calendar currentTimeCalendar = Calendar.getInstance(TimeZone.getTimeZone(("Europe/Moscow")));
+        currentTimeCalendar.setTimeInMillis(currentTime * 1000L);
+        if (currentTimeCalendar.get(Calendar.MONTH) + 1 != currentMonthNumber) {
+            currentMonthNumber = currentTimeCalendar.get(Calendar.MONTH) + 1;
+            return true;
+        }
+        return false;
     }
 }

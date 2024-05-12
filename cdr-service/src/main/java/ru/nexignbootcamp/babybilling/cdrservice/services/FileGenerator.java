@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.CDREntity;
-import ru.nexignbootcamp.babybilling.cdrservice.mappers.impl.CDREntityStringMapperWithoutIdImpl;
+import ru.nexignbootcamp.babybilling.cdrservice.mappers.impl.CDREntityStringMapperImpl;
 import ru.nexignbootcamp.babybilling.cdrservice.repositories.CDRRepository;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class FileGenerator {
     private CDRRepository cdrRepository;
 
     @Autowired
-    CDREntityStringMapperWithoutIdImpl cdrEntityStringMapperWithoutId;
+    CDREntityStringMapperImpl cdrEntityStringMapperWithoutId;
 
     @Autowired
     FileToKafkaProducerTransfer fileToKafkaProducerTransfer;

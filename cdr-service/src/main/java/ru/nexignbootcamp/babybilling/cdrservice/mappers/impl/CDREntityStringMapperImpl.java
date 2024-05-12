@@ -5,7 +5,7 @@ import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.CDREntity;
 import ru.nexignbootcamp.babybilling.cdrservice.mappers.Mapper;
 
 @Component
-public class CDREntityStringMapperWithoutIdImpl implements Mapper<CDREntity, String> {
+public class CDREntityStringMapperImpl implements Mapper<CDREntity, String> {
 
     @Override
     public String mapTo(CDREntity cdrEntity) {

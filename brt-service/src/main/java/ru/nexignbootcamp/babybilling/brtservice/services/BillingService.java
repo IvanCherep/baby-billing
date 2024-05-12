@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,14 +26,20 @@ import java.util.Optional;
 @Slf4j
 public class BillingService {
 
-    @Autowired
-    MsisdnRepository msisdnRepository;
+    private MsisdnRepository msisdnRepository;
 
-    @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
-    @Value("${calculate.person.url}")
-    String calculateUrl;
+    private Environment environment;
+
+    private String calculateUrl;
+
+    public BillingService(MsisdnRepository msisdnRepository, RestTemplate restTemplate, Environment environment) {
+        this.msisdnRepository = msisdnRepository;
+        this.restTemplate = restTemplate;
+        this.environment = environment;
+        calculateUrl = environment.getProperty("HRS_SERVICE_CALCULATE_PERSON_URL");
+    }
 
     public void processCDR(CDR cdr) {
 

@@ -13,6 +13,9 @@ import org.springframework.kafka.core.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Конфигурация продюсева Kafka.
+ */
 @Configuration
 @EnableKafka
 public class KafkaConfig {
@@ -20,9 +23,6 @@ public class KafkaConfig {
     @Autowired
     Environment env;
 
-    /**
-     * Kafka Producer Configuration
-     */
     @SuppressWarnings("rawtypes")
     @Bean
     public ProducerFactory producerFactory() {

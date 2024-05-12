@@ -9,6 +9,10 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
+/**
+ * VALUE_SERIALIZER_CLASS для конфигурации Apache Kafka.
+ * Преобразует объект типа Map<String, byte[]> в последовательноть байт
+ */
 @Slf4j
 public class MapSerializer implements Serializer<Map<?, ?>> {
 
