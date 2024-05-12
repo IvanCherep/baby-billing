@@ -129,7 +129,7 @@
 			<li>Пример запроса через postman для 30 минутного звонка. Дата последней оплаты датируется прошлым месяцем, стоимость минуты звонка 1.5 у.е.: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/calculate_postman_example.png" alt="calculate запрос через postman"></li>
 		</ul>
 	</ul>
-	<p>Чтобы вам было проще проверять, прикладываю тела к запросам:</p>
+	<p>Для простоты проверки прикладываю тела к запросам:</p>
 	<ul>
 		<li>
 			<p>PUT localhost:8082/pay/79212345678</p>
