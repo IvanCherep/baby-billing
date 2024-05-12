@@ -93,7 +93,7 @@
 		</ul>
   	</ul>
    	<p>Теперь вы можете просматривать содержимое баз данных cdr-сервиса и brt-сервиса. Для просмтра содержимого необходимо открыть Server(2)->cdr-service->Database(1)->postgres->Schemas(1)->public->Tables(2) или Serverы(2)->brt-service->Database(1)->postgres->Schemas(1)->public->Tables(3) соответственно. </p>
-	<p>Посмотрим содержимое таблицы msisdns в brt-service. Как видно, только 1 клиент имеет положительный баланс. Это отличиный повод написать сервис, который будет присылать клиентам с отрицательным балансом уведомление о том, что необходимо пополнить счет. Конечно, сейчас я это делать не буду, но отметим это как точку роста!)</p>
+	<p>Посмотрим содержимое таблицы msisdns в brt-service. Как видно, только 1 клиент имеет положительный баланс. Это отличиный повод написать сервис, который будет присылать клиентам с отрицательным балансом уведомление о том, что необходимо пополнить счет.</p>
 	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/brt-service_db_msisdns_table.png" alt="Содержимое таблицы msisdns">
 	<p>Также, давайте посмотрим содержимое таблицы clients в brt-service:</p>
 	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/brt-service_db_clients_table.png" alt="Содержимое таблицы clients">
@@ -115,7 +115,7 @@
 			<li>Адрес сервиса localhost:8082</li>
 			<li>POST /changeTariff</li>
 			<li>Content-Type: application/json</li>
-			<li>Я не успели дописать реализация с использованием Spring Security. Поэтому сейчас менеджерский логин и пароль отправляется в теле POST запроса. В дальнейших итерациях проекта, это первое, что нужно исправить.</li>
+			<li>Я не успел дописать реализация с использованием Spring Security. Поэтому сейчас менеджерский логин и пароль отправляется в теле POST запроса. В дальнейших итерациях проекта, это первое, что нужно исправить.</li>
 			<li>Пример запроса через postman: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/changeTariff_postman_example.png" alt="changeTariff запрос через postman"></li> 
 		</ul>
 	</ul>
