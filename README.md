@@ -50,6 +50,9 @@
 		<li> Информация о пополнение баланса абонента </li>
 		<li> Информация о изменении тарифа абонента </li>
 	</ul>
+	Пример:
+	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/logs_example.png" alt="Пример логов">
+	
 </details>
 
 <details>
@@ -86,10 +89,42 @@
 		</ul>
   	</ul>
    	<p>Теперь вы можете просматривать содержимое баз данных cdr-сервиса и brt-сервиса. Для просмтра содержимого необходимо открыть Server(2)->cdr-service->Database(1)->postgres->Schemas(1)->public->Tables(2) или Serverы(2)->brt-service->Database(1)->postgres->Schemas(1)->public->Tables(3) соответственно. </p>
+	<p>Посмотрим содержимое таблицы msisdns в brt-service. Как видно, только 1 клиент имеет положительный баланс. Это отличиный повод написать сервис, который будет присылать клиентам с отрицательным балансом уведомление о том, что необходимо пополнить счет. Конечно, сейчас я это делать не буду, но отметим это как точку роста!)</p>
+	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/brt-service_db_msisdns_table.png" alt="Содержимое таблицы msisdns">
+	<p>Также, давайте посмотрим содержимое таблицы clients в brt-service:</p>
+	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/brt-service_db_clients_table.png" alt="Содержимое таблицы clients">
 </details>
 
 <details>
-<summary>Отправка запросов в API</summary>
+<summary>Запросы к API</summary>
+	<p>BRT-сервис</p>
+	<ul>
+		<li>Пополнение счета.</li>
+		<ul>
+			<li>Адрес сервиса localhost:8082</li>
+			<li>PUT /pay/{msisdn}</li>
+			<li>Content-Type: application/json</li>
+			<li>Пример запроса через postman: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/pay_postman_example.png" alt="pay запрос через postman"></li>
+		</ul>
+		<li>Смена тарифа.</li>
+		<ul>
+			<li>Адрес сервиса localhost:8082</li>
+			<li>POST /changeTariff</li>
+			<li>Content-Type: application/json</li>
+			<li>Я не успели дописать реализация с использованием Spring Security. Поэтому сейчас менеджерский логин и пароль отправляется в теле POST запроса. В дальнейших итерациях проекта, это первое, что нужно исправить.</li>
+			<li>Пример запроса через postman: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/changeTariff_postman_example.png" alt="changeTariff запрос через postman"></li> 
+		</ul>
+	</ul>
+	<p>HRS-сервис</p>
+	<ul>
+		<li>Расчет стоимости звонка.</li>
+		<ul>
+			<li>Адрес сервиса localhost:8083</li>
+			<li>POST /calculate</li>
+			<li>Content-Type: application/json</li>
+			<li>Пример запроса через postman для 30 минутного звонка. Дата последней оплаты датируется прошлым месяцем, стоимость минуты звонка 1.5 у.е.: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/calculate_postman_example.png" alt="calculate запрос через postman"></li>
+		</ul>
+	</ul>
 </details>
 
 
@@ -209,7 +244,7 @@ BRT сервис имеет пять основных функций:
 	<li> controllers </li>
 	<ul>
 		<li> ClientController - Контроллер принимающий запросы от клиентов. На данный момент принимает только запрос на пополнение счета.</li>
-		<li> ManagerController - Контроллер принимающий запросы от менеджеров. На данный момент принимает запросы на смену тарифа и добавление нового номера.</li>
+		<li> ManagerController - Контроллер принимающий запросы от менеджеров. На данный момент принимает запросы на смену тарифа.</li>
 	</ul>
 	<li> domain </li>
 	<ul>
@@ -260,7 +295,7 @@ BRT сервис имеет пять основных функций:
 
 ## HRS-сервис
 ### Описание
-<p>HRS-сервис имеет одну главную функцию - расчет стоимости звонка.</p>
+<p>Главная функция HRS-сервиса - расчет стоимости звонка. Также сервис выставлет счету на оплату клиентам с помесячным тарифом. То есть деньги с клиентов, которые используют тарифы с ежемесячном оплатой, будут списаны с получением записи о звонке клиента, которая датирутся новым месяцем.</p>
 <details>
 <summary>Структура сервиса</summary>
 <ul>
