@@ -115,7 +115,7 @@
 			<li>Адрес сервиса localhost:8082</li>
 			<li>POST /changeTariff</li>
 			<li>Content-Type: application/json</li>
-			<li>Я не успел дописать реализация с использованием Spring Security. Поэтому сейчас менеджерский логин и пароль отправляется в теле POST запроса. В дальнейших итерациях проекта, это первое, что нужно исправить.</li>
+			<li>Как временное решение, вместо Spring Security, менеджерский логин и пароль отправляется в теле POST запроса. В дальнейших итерациях проекта, это первое, что нужно исправить.</li>
 			<li>Пример запроса через postman: <img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/changeTariff_postman_example.png" alt="changeTariff запрос через postman"></li> 
 		</ul>
 	</ul>
