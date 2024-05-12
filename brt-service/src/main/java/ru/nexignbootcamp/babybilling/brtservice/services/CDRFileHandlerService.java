@@ -12,6 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Считывает cdr-файл и все записи о звонках,
+ * которые относятся к клиентам нашего оператора передает в BillingService.
+ */
 @Service
 @Slf4j
 public class CDRFileHandlerService {

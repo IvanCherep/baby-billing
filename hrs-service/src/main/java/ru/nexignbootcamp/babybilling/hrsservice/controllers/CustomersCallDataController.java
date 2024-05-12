@@ -7,6 +7,9 @@ import ru.nexignbootcamp.babybilling.hrsservice.domain.ClientBill;
 import ru.nexignbootcamp.babybilling.hrsservice.domain.ClientCallData;
 import ru.nexignbootcamp.babybilling.hrsservice.services.BillCalculationService;
 
+/**
+ * Контроллер принимат все необходимые для расчета стоимости звонка данные и возвращает стоимость звонка.
+ */
 @RestController
 public class CustomersCallDataController {
 

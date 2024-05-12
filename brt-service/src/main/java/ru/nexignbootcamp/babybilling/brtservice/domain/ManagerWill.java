@@ -6,22 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Данные о звонке.
+ * Данные для смены тарифа.
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CDR {
+public class ManagerWill {
 
-    private String callType;
+    private String login;
 
-    private Long clientMsisdn;
+    private String password;
 
-    private Long targetMsisdn;
+    private Long msisdn;
 
-    private Long startTime;
-
-    private Long endTime;
+    private Integer tariffId;
 
 }

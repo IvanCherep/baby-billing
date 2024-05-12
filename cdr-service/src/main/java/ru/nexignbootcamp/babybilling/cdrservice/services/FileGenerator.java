@@ -13,6 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+/**
+ * ВЗаписыват переданные данные о звонках в файл.
+ * После того, как записей в файле становится 10, отправляет файл
+ * в FileToKafkaProducerTransfer, который в дальнейшем преобразует его
+ * в массив байтов..
+ */
 @Service
 @Slf4j
 public class FileGenerator {
@@ -32,7 +38,6 @@ public class FileGenerator {
 
 
     public void writeCdrToFile(CDREntity[] cdrPair) {
-//        Path cdrFile = Paths.get("cdr-service/cdr_files/cdr_file_" + fileNumber + ".txt");
         Path cdrFile = Paths.get("/cdr_files/cdr_file_" + fileNumber + ".txt");
 
         try {

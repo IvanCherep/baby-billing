@@ -5,6 +5,9 @@ import ru.nexignbootcamp.babybilling.brtservice.domain.dto.ClientDto;
 import ru.nexignbootcamp.babybilling.brtservice.domain.entity.ClientEntity;
 import ru.nexignbootcamp.babybilling.brtservice.mappers.Mapper;
 
+/**
+ * Преобразует ClientEntity в ClientDto и обратно.
+ */
 public class ClientMapperImpl implements Mapper<ClientEntity, ClientDto> {
 
     private ModelMapper modelMapper;

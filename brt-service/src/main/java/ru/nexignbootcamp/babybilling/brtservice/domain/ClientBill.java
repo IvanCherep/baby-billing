@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Данные о списание денег и минут с клиента от HRS-сервиса.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

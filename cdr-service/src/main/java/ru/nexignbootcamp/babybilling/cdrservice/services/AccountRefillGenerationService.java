@@ -11,6 +11,9 @@ import ru.nexignbootcamp.babybilling.cdrservice.repositories.UserRepository;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Отправляет запросы на пополнение всех клиентских счетов на сумму от 1 до 1000 у.е.
+ */
 @Service
 public class AccountRefillGenerationService {
 

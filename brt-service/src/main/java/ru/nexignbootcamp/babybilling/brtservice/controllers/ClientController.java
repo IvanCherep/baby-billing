@@ -3,9 +3,13 @@ package ru.nexignbootcamp.babybilling.brtservice.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.nexignbootcamp.babybilling.brtservice.domain.dto.AccountRefillDto;
+import ru.nexignbootcamp.babybilling.brtservice.domain.AccountRefill;
 import ru.nexignbootcamp.babybilling.brtservice.services.ClientManagementService;
 
+/**
+ * Контроллер принимающий запросы от клиентов.
+ * На данный момент принимает только запрос на пополнение счета.
+ */
 @RestController
 public class ClientController {
 
@@ -16,16 +20,16 @@ public class ClientController {
     }
 
     @PutMapping("/pay/{msisdn}")
-    public ResponseEntity<AccountRefillDto> pay(
+    public ResponseEntity<AccountRefill> pay(
             @PathVariable Long msisdn,
-            @RequestBody AccountRefillDto accountRefillDto
+            @RequestBody AccountRefill accountRefill
     ) {
         if (!clientManagementService.isClientExist(msisdn)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(
-                clientManagementService.refill(msisdn, accountRefillDto),
+                clientManagementService.refill(msisdn, accountRefill),
                 HttpStatus.OK
         );
     }

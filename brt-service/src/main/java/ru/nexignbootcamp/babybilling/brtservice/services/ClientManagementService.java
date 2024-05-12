@@ -2,13 +2,16 @@ package ru.nexignbootcamp.babybilling.brtservice.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.nexignbootcamp.babybilling.brtservice.domain.dto.AccountRefillDto;
-import ru.nexignbootcamp.babybilling.brtservice.domain.dto.ManagerWillDto;
+import ru.nexignbootcamp.babybilling.brtservice.domain.AccountRefill;
+import ru.nexignbootcamp.babybilling.brtservice.domain.ManagerWill;
 import ru.nexignbootcamp.babybilling.brtservice.domain.entity.DataPlanEntity;
 import ru.nexignbootcamp.babybilling.brtservice.domain.entity.MsisdnEntity;
 import ru.nexignbootcamp.babybilling.brtservice.repositories.DataPlanRepository;
 import ru.nexignbootcamp.babybilling.brtservice.repositories.MsisdnRepository;
 
+/**
+ * Сервис выполняет все задачи переданные от клиентских и менеджерских контролллеров.
+ */
 @Service
 @Slf4j
 public class ClientManagementService {
@@ -26,28 +29,28 @@ public class ClientManagementService {
         return msisdnRepository.existsById(msisdn);
     }
 
-    public AccountRefillDto refill(Long msisdn, AccountRefillDto accountRefillDto) {
-        accountRefillDto.setMsisdn(msisdn);
+    public AccountRefill refill(Long msisdn, AccountRefill accountRefill) {
+        accountRefill.setMsisdn(msisdn);
         MsisdnEntity msisdnEntity = msisdnRepository.findById(msisdn).get();
-        Float accountRefillAmount = accountRefillDto.getMoney();
+        Float accountRefillAmount = accountRefill.getMoney();
         Float msisdnRefilledMoney = msisdnEntity.getRemainingMoney() + accountRefillAmount;
         msisdnEntity.setRemainingMoney(msisdnRefilledMoney);
         msisdnRepository.save(msisdnEntity);
-        accountRefillDto.setMoney(msisdnRefilledMoney);
+        accountRefill.setMoney(msisdnRefilledMoney);
         log.info(
                 String.format("Msisdn +%d has been refilled by %.2f y.e. Current balance: %.2f",
                         msisdn,
                         accountRefillAmount,
                         msisdnRefilledMoney)
         );
-        return accountRefillDto;
+        return accountRefill;
     }
 
-    public void changeTariff(ManagerWillDto managerWillDto) {
-        MsisdnEntity msisdnEntity = msisdnRepository.findById(managerWillDto.getMsisdn()).get();
-        DataPlanEntity newDataPlan = dataPlanRepository.findById(managerWillDto.getTariffId()).get();
-        if (managerWillDto.getTariffId() == msisdnEntity.getDataPlan().getId()) {
-            log.info(String.format("The tariff has not been changed. Msisdn: +%d already uses the tariff with id %d.", managerWillDto.getMsisdn(), managerWillDto.getTariffId()));
+    public void changeTariff(ManagerWill managerWill) {
+        MsisdnEntity msisdnEntity = msisdnRepository.findById(managerWill.getMsisdn()).get();
+        DataPlanEntity newDataPlan = dataPlanRepository.findById(managerWill.getTariffId()).get();
+        if (managerWill.getTariffId() == msisdnEntity.getDataPlan().getId()) {
+            log.info(String.format("The tariff has not been changed. Msisdn: +%d already uses the tariff with id %d.", managerWill.getMsisdn(), managerWill.getTariffId()));
             return;
         }
         msisdnEntity.setDataPlan(newDataPlan);

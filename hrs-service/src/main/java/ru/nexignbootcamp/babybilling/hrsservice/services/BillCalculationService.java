@@ -10,6 +10,9 @@ import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+/**
+ * Сервис расчитывает стоимость звонка на основании полученных данных.
+ */
 @Service
 @Log
 public class BillCalculationService {

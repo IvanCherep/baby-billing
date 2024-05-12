@@ -11,6 +11,11 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.TimeZone;
 
+/**
+ * GeneratorService - генерирует действия пользователей за 1 год. Сюда относится:
+ * - Генерация записей о звонках абонентов и их передача в FileGenerator.
+ * - Ежемесячный вызов генераторов смены тарифа и пополненичй счета клиентов.
+ */
 @Service
 @Log
 public class GeneratorService {
@@ -72,7 +77,8 @@ public class GeneratorService {
     public void run() {
         Long endTime = currentStartTime + 1;
         while (endTime <= rightBoundary) {
-            endTime = currentStartTime + random.nextLong(maxCallTime) + 1;
+            Long callDuration = random.nextLong(maxCallTime) + 1;
+            endTime = currentStartTime + callDuration;
             Long[] userAndTargetMsisdn = generateUserAndTargetMsisdn();
 
             CDREntity cdr1 = CDREntity.builder()
@@ -93,8 +99,8 @@ public class GeneratorService {
 
             cdrRepository.save(cdr1);
             cdrRepository.save(cdr2);
-            
-            currentStartTime += (currentStartTime - endTime) / 2;
+
+            currentStartTime += callDuration / 2;
             if (random.nextBoolean()) {
                 currentStartTime += random.nextLong(86400) + 1;
             }

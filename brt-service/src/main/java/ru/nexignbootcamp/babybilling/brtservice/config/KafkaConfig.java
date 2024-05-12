@@ -18,6 +18,9 @@ import ru.nexignbootcamp.babybilling.brtservice.consumer.KafkaConsumer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Конфигурация для консьюмера Kafka
+ */
 @Configuration
 @EnableKafka
 public class KafkaConfig {
@@ -25,9 +28,6 @@ public class KafkaConfig {
     @Autowired
     Environment env;
 
-    /**
-     * Kafka Consumer Configuration
-     */
     @Bean
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();

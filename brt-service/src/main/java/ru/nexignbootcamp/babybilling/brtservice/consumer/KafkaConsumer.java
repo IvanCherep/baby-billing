@@ -12,6 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
+/**
+ *  Консьюмер сообщений Kafka.
+ */
 @Slf4j
 public class KafkaConsumer {
 

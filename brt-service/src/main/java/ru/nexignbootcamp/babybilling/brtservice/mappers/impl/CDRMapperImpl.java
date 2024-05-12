@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 import ru.nexignbootcamp.babybilling.brtservice.domain.CDR;
 import ru.nexignbootcamp.babybilling.brtservice.mappers.Mapper;
 
+/**
+ * Пробразует запись о звонке в строку и обратно.
+ */
 @Component
 public class CDRMapperImpl implements Mapper<CDR, String> {
 

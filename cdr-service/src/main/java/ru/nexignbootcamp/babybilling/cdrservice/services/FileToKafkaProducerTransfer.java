@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Преобразует файл в массив байтов и отправлят его в Kafka продюсер.
+ */
 @Service
 @Slf4j
 public class FileToKafkaProducerTransfer {

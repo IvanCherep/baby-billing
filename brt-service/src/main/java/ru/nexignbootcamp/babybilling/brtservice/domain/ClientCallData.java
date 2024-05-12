@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Данные необходимые HRS-сервису для того, чтобы расчитать
+ * сколько денег и минут нужно списать с клиента
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

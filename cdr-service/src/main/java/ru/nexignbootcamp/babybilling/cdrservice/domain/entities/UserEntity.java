@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Сущность представляющая из себя номер телефона
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

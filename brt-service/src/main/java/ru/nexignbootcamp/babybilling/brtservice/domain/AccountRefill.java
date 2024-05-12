@@ -1,22 +1,21 @@
-package ru.nexignbootcamp.babybilling.brtservice.domain.dto;
+package ru.nexignbootcamp.babybilling.brtservice.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Данные для пополнения счета.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ManagerWillDto {
-
-    private String login;
-
-    private String password;
+public class AccountRefill {
 
     private Long msisdn;
 
-    private Integer tariffId;
+    private Float money;
 
 }

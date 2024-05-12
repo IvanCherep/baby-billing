@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Сущность представлющая из себя запись о звонке.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

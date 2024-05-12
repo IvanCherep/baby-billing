@@ -16,6 +16,7 @@ import java.util.Set;
 
 /**
  * Сервис гегенарции действий менеджера по смене тарифоф пользователей.
+ * Выбирает от 1 до 3 случайных номеров и менят им тарифы.
  */
 @Service
 public class ChangeTariffGenerationService {

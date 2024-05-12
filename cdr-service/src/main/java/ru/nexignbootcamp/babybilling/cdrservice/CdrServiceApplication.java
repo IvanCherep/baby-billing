@@ -27,7 +27,6 @@ public class CdrServiceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-//		Path cdrFilesDirectory = Paths.get("cdr-service/cdr_files");
 		Path cdrFilesDirectory = Paths.get("/cdr_files");
 		if (Files.exists(cdrFilesDirectory)) {
 			Files.walk(cdrFilesDirectory)

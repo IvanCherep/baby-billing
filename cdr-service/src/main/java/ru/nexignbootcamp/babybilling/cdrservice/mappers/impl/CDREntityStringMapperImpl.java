@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 import ru.nexignbootcamp.babybilling.cdrservice.domain.entities.CDREntity;
 import ru.nexignbootcamp.babybilling.cdrservice.mappers.Mapper;
 
+/**
+ * Преобразует CDREntity в строку и обратно.
+ */
 @Component
 public class CDREntityStringMapperImpl implements Mapper<CDREntity, String> {
 

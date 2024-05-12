@@ -22,6 +22,11 @@ import ru.nexignbootcamp.babybilling.brtservice.repositories.MsisdnRepository;
 
 import java.util.Optional;
 
+/**
+ * Сервис принимат запись о звонке, собират данные о клиенте,
+ * который совершившил звонок, и передает эти данные для оценки
+ * в HRS-сервис. На основе полученных данных изменяет баланс.
+ */
 @Service
 @Slf4j
 public class BillingService {

@@ -5,6 +5,9 @@ import ru.nexignbootcamp.babybilling.brtservice.domain.dto.DataPlanDto;
 import ru.nexignbootcamp.babybilling.brtservice.domain.entity.DataPlanEntity;
 import ru.nexignbootcamp.babybilling.brtservice.mappers.Mapper;
 
+/**
+ * Преобразует DataPlanEntity в DataPlanDto и обратно.
+ */
 public class DataPlanMapperImpl implements Mapper<DataPlanEntity, DataPlanDto> {
 
     private ModelMapper modelMapper;

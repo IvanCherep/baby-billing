@@ -10,6 +10,11 @@ import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Преобразует массив байт в объект типа Map&ltString, byte[]&gt.
+ * Используется в качестве VALUE_DESERIALIZER_CLASS_CONFIG для
+ * конфигурации Apache Kafka.
+ */
 @Slf4j
 public class MapDeserializer implements Deserializer<Map> {
 
