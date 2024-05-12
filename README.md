@@ -107,6 +107,12 @@ CDR сервис имеет две основые функции: <br>
 </details>
 
 <details>
+<summary>Структура базы данных сервиса</summary>
+	<p> Таблица users имеет поле id, для того, чтобы упростить выбор случайного номера телефона из таблицы. Таблица transactions является служебной и используется для того, чтобы проверять правильность работы системы. Так, как обе таблицы являются служебными, было принятно решение, не связывать таблицу transactions с таблицей users при помощи внешних ключей.</p>
+	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/cdr-service_db_structure.png" alt="Структура базы данных у BRT-сервиса">
+</details>
+
+<details>
 <summary>Структура сервиса</summary>
 <ul>
 	<li> config </li>
@@ -180,6 +186,11 @@ BRT сервис имеет пять основных функций:
 	<li> Изменение баланса на основе полученных данных. </li>
 	<li> Измение пользовательских данных по запросу. </li>
 </ul>
+
+<details>
+<summary>Структура базы данных сервиса</summary>
+	<img src="https://raw.githubusercontent.com/IvanCherep/baby-billing/screenshots/images/brt-service_db_structure.png" alt="Структура базы данных у BRT-сервиса">
+</details>
 
 <details>
 <summary>Структура сервиса</summary>
