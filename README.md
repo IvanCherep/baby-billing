@@ -93,7 +93,7 @@
 </details>
 
 
-## CDR сервис
+## CDR-сервис
 ### Описание
 CDR сервис имеет две основые функции: <br>
 * Эмуляция работы коммутатора. Сервис генерирует данные о звонках, собирает из них CDR-файлы и отправляет в BRT сервис.
@@ -111,9 +111,9 @@ CDR сервис имеет две основые функции: <br>
 <ul>
 	<li> config </li>
 	<ul>
-		<li> KafkaConfig - конфигурация для продюсера Kafka. </li>
-		<li> MapSerializer - преобразует объекты типа Map&ltString, byte[]&gt в последовательность байт. Используется в качестве VALUE_SERIALIZER_CLASS для конфигурации Apache Kafka.</li>
-		<li> RestTemplateConfig - создает бин RestTemplate. </li>
+		<li> KafkaConfig - Конфигурация для продюсера Kafka. </li>
+		<li> MapSerializer - Преобразует объекты типа Map&ltString, byte[]&gt в последовательность байт. Используется в качестве VALUE_SERIALIZER_CLASS для конфигурации Apache Kafka.</li>
+		<li> RestTemplateConfig - Создает бин RestTemplate. </li>
 	</ul>
 	<li> domain </li>
 	<ul>
@@ -129,26 +129,26 @@ CDR сервис имеет две основые функции: <br>
 	<ul>
 		<li> impl </li>
 		<ul>
-			<li> CDREntityStringMapperImpl - пробразует CDREntity (без id) в строку и обратно.</li> 
+			<li> CDREntityStringMapperImpl - Пробразует CDREntity (без id) в строку и обратно.</li> 
 		</ul>
 		<li> Mapper&ltA, B&gt - Маппинг интерфейс. </li>
 	</ul>
 	<li> producer </li>
 	<ul>
-		<li> KafkaProducer - продюсер сообщений Kafka.</li>
+		<li> KafkaProducer - Продюсер сообщений Kafka.</li>
 	</ul>
 	<li> repoitories </li>
 	<ul>
-		<li> CDRRepository - репозиторий для взаимодействия с таблицей, содержащий записи о звонках.</li>
-		<li> UserRepository - репозиторий для взаимодействия с таблицей, содержит номера телефонов клиентов.</li>
+		<li> CDRRepository - Репозиторий для взаимодействия с таблицей, содержащий записи о звонках.</li>
+		<li> UserRepository - Репозиторий для взаимодействия с таблицей, содержит номера телефонов клиентов.</li>
 	</ul>
 	<li> services </li>
 	<ul>
-		<li> AccountRefillGenerationService - отправляет запросы в brt-севрис на пополнение всех клиентских счетов на сумму от 1 до 1000 у.е.</li>
-		<li> ChangeTariffGenerationService - выбирает от 1 до 3 случайных клиентов и отправляет запросы в brt-севрис на смену их тарифов.</li>
+		<li> AccountRefillGenerationService - Отправляет запросы в brt-севрис на пополнение всех клиентских счетов на сумму от 1 до 1000 у.е.</li>
+		<li> ChangeTariffGenerationService - Выбирает от 1 до 3 случайных клиентов и отправляет запросы в brt-севрис на смену их тарифов.</li>
 		<li> FileGenerator - Записыват переданные данные о звонках в файл. После того, как записей в файле становится 10, отправляет файл в FileToKafkaProducerTransfer, который в дальнейшем преобразует его в массив байтов.</li>
 		<li> FileToKafkaProducerTransfer - Преобразует файл в массив байтов и отправлят его в Kafka продюсер.</li>
-		<li> GeneratorService - генерирует действия пользователей за 1 год. Сюда относится:</li>
+		<li> GeneratorService - Генерирует действия пользователей за 1 год. Сюда относится:</li>
   		<ul>
 			<li>  Генерация записей о звонках абонентов и их передача в FileGenerator. </li>
 			<li>  Ежемесячный вызов генераторов смены тарифа и пополненичй счета клиентов. </li>
@@ -169,6 +169,107 @@ CDR сервис имеет две основые функции: <br>
 		<li> Важно! После формирования любой записи о звонке к времени начала следуюещго звонка с вероятностью 0.5 может прибавиться случайное количество минут от 1 до 1440</li>
 	</ul>
 </details>
+
+## BRT-сервис
+### Описание
+BRT сервис имеет пять основных функций:
+<ul>
+	<li> Хранение данных о абонентах, тарифе и текущем балансе. </li>
+	<li> Авторизация абонентов, приходящий в CDR-файлах. </li>
+	<li> Передача данных о звонках и тарифах в HRS-севрис. </li>
+	<li> Изменение баланса на основе полученных данных. </li>
+	<li> Измение пользовательских данных по запросу. </li>
+</ul>
+
+<details>
+<summary>Структура сервиса</summary>
+<ul>
+	<li> config </li>
+	<ul>
+		<li> KafkaConfig - Конфигурация для консьюмера Kafka. </li>
+		<li> MapDeserializer - Преобразует массив байт в объект типа Map&ltString, byte[]&gt. Используется в качестве VALUE_DESERIALIZER_CLASS_CONFIG для конфигурации Apache Kafka.</li>
+		<li> MapperConfig - Создает бин ModelMapper. </li>
+		<li> RestTemplateConfig - Создает бин RestTemplate. </li>
+	</ul>
+	<li> consumer </li>
+	<ul>
+		<li> KafkaProducer - Консьюмер сообщений Kafka.</li>
+	</ul>
+	<li> controllers </li>
+	<ul>
+		<li> ClientController - Контроллер принимающий запросы от клиентов. На данный момент принимает только запрос на пополнение счета.</li>
+		<li> ManagerController - Контроллер принимающий запросы от менеджеров. На данный момент принимает запросы на смену тарифа и добавление нового номера.</li>
+	</ul>
+	<li> domain </li>
+	<ul>
+		<li> dto </li>
+		<ul>
+			<li> ClientDto - DTO для клиентской сущности. </li> 
+			<li> DataPlanDto - DTO для сущности тарифа. </li>
+			<li> MsisdnDto - DTO для сущности номера телефона. </li>
+		</ul>
+		<li> entity </li>
+		<ul>
+			<li> ClientEntity - Сущность представляющая из себя данные о клиенте. </li> 
+			<li> DataPlanEntity - Сущность представляющая из себя данные о тарифе. </li> 
+			<li> MsisdnEntity - Сущность представляющая из себя данные о номере телефоне. </li>
+		</ul>
+		<li> AccountRefill - Данные для пополнения счета. </li>
+		<li> CDR - Данные о звонке. </li>
+		<li> ClientBill - Данные о списание денег и минут с клиента от HRS-сервиса. </li>
+		<li> ClientCallData - Данные необходимые HRS-сервису для того, чтобы расчитать сколько денег и минут нужно списать с клиента. </li>
+		<li> ManagerWill - Данные для смены тарифа. </li>
+	</ul>
+	<li> mappers </li>
+	<ul>
+		<li> impl </li>
+		<ul>
+			<li> CDRMapperImpl - Пробразует запись о звонке в строку и обратно.</li> 
+			<li> ClientMapperImpl - Преобразует ClientEntity в ClientDto и обратно.</li> 
+			<li> DataPlanMapperImpl - Преобразует DataPlanEntity в DataPlanDto и обратно.</li> 
+			<li> MsisdnMapperImpl - Преобразует MsisdnEntity в MsisdnDto и обратно.</li> 
+		</ul>
+		<li> Mapper&ltA, B&gt - Маппинг интерфейс. </li>
+	</ul>
+	<li> repoitories </li>
+	<ul>
+		<li> ClientRepository - Репозиторий для взаимодействия с таблицей клиентов.</li>
+		<li> DataPlanRepository - Репозиторий для взаимодействия с таблицей тарифов.</li>
+		<li> MsisdnRepository - Репозиторий для взаимодействия с таблицей телефонных номеров и их характеристик.</li>
+	</ul>
+	<li> services </li>
+	<ul>
+		<li> BillingService - Сервис принимат запись о звонке, собират данные о клиенте, который совершившил звонок, и передает эти данные для оценки в HRS-сервис. На основе полученных данных изменяет баланс.</li>
+		<li> CDRFileHandlerService - Считывает cdr-файл и все записи о звонках, которые относятся к клиентам нашего оператора передает в BillingService. </li>
+		<li> ClientManagementService - Сервис выполняет все задачи переданные от клиентских и менеджерских контролллеров. </li>
+	</ul>
+	<li> BrtServiceApplication - Запускает приложение.</li>
+</ul>
+</details>
+
+## HRS-сервис
+### Описание
+<p>HRS-сервис имеет одну главную функцию - расчет стоимости звонка.</p>
+<details>
+<summary>Структура сервиса</summary>
+<ul>
+	<li> controllers </li>
+	<ul>
+		<li> CustomersCallDataController - Контроллер принимат все необходимые для расчета стоимости звонка данные и возвращает стоимость звонка. </li>
+	</ul>
+	<li> domain </li>
+	<ul>
+		<li> ClientBill - Данные о списание денег и минут с клиента. </li>
+		<li> ClientCallData - Данные необходимые сервису для того, чтобы расчитать сколько денег и минут нужно списать с клиента. </li>
+	</ul>
+	<li> services </li>
+	<ul>
+		<li> BillCalculationService - Сервис расчитывает стоимость звонка на основании полученных данных. </li>
+	</ul>
+	<li> HrsServiceApplication - Запускает приложение. </li>
+</ul>
+</details>
+
 
 
 
